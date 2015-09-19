@@ -65,7 +65,7 @@ void display()
         cutImage(image, mPoint, frames);
     }
     
-    // Draw Image
+    // openCV -> openGL Image
     cv::flip(image, image, 0);
     cv::cvtColor(image, image, CV_BGR2RGB);
     
@@ -73,6 +73,13 @@ void display()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     
+    // RGB -> HSV
+    _hsvChannels hsv = splitHSV(toHSV(image));
+    cv::imshow("HSV H", hsv.H);
+    cv::imshow("HSV S", hsv.S);
+    cv::imshow("HSV V", hsv.V);
+    
+    // Draw Image
     glFlush();
     glutPostRedisplay();
 }
@@ -122,6 +129,7 @@ void mouse(int button, int state, int x, int y)
             break;
     }
 }
+
 
 // Main Program
 int main(int argc, char * argv[]) {

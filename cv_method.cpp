@@ -41,3 +41,31 @@ void cutImage(cv::Mat image, _mousePoint mPoint[2], int frames) {
     filename = filename + std::to_string(frames) + ".jpg";
     cv::imwrite(filename, cutimg);
 }
+
+
+// RGB to HSV
+cv::Mat toHSV(cv::Mat image) {
+    cv::Mat hsvImage;
+    cv::cvtColor(image, hsvImage, CV_BGR2HSV);
+    return hsvImage;
+}
+
+
+// HSV to RGB
+cv::Mat toRGB(cv::Mat image) {
+    cv::Mat rgbImage;
+    cv::cvtColor(image, rgbImage, CV_HSV2BGR_FULL);
+    return rgbImage;
+}
+
+
+// split HSV
+_hsvChannels splitHSV(cv::Mat image) {
+    _hsvChannels hsv;
+    cv::Mat channels[3];
+    cv::split(image, channels);
+    hsv.H = channels[0];
+    hsv.S = channels[1];
+    hsv.V = channels[2];
+    return hsv;
+}

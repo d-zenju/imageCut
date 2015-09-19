@@ -12,5 +12,8 @@
 #include "init.hpp"
 
 void cutImage(cv::Mat image, _mousePoint mPoint[2], int frames);
+cv::Mat toHSV(cv::Mat image);
+cv::Mat toRGB(cv::Mat image);
+_hsvChannels splitHSV(cv::Mat image);
 
 #endif /* cv_method_hpp */

@@ -19,4 +19,12 @@ typedef struct {
     int y;
 } _mousePoint;
 
+
+// HSV struct
+typedef struct {
+    cv::Mat H;
+    cv::Mat S;
+    cv::Mat V;
+} _hsvChannels;
+
 #endif /* init_hpp */
