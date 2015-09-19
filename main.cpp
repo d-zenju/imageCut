@@ -79,6 +79,9 @@ void display()
     cv::imshow("HSV S", hsv.S);
     cv::imshow("HSV V", hsv.V);
     
+    // RGB -> Gray
+    cv::imshow("Gray", toGray(image));
+    
     // Draw Image
     glFlush();
     glutPostRedisplay();

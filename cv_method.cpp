@@ -69,3 +69,11 @@ _hsvChannels splitHSV(cv::Mat image) {
     hsv.V = channels[2];
     return hsv;
 }
+
+
+// RGB to Gray
+cv::Mat toGray(cv::Mat image) {
+    cv::Mat grayImage;
+    cv::cvtColor(image, grayImage, CV_RGB2GRAY);
+    return grayImage;
+}
