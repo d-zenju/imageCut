@@ -6,10 +6,6 @@
 //  Copyright (c) 2015年 ZENJU Daisuke. All rights reserved.
 //
 
-/**********************************************
-指定した座標の画像切り出しができた
-拡大縮小対応
-***********************************************/
 
 #include "cv_method.hpp"
 
@@ -73,14 +69,26 @@ void display()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     
+    cv::flip(image, image, 0);
+    
+    /*
     // RGB -> HSV
     _hsvChannels hsv = splitHSV(toHSV(image));
     cv::imshow("HSV H", hsv.H);
     cv::imshow("HSV S", hsv.S);
     cv::imshow("HSV V", hsv.V);
+    */
     
     // RGB -> Gray
-    cv::imshow("Gray", toGray(image));
+    //cv::imshow("Gray", toGray(image));
+    
+    // Thresh
+    cv::imshow("Adaptive Thresh", threshAdaptive(toGray(bilateral(image, 20, 90, 40)), 7, 6));
+    cv::imshow("Otu Thresh", threshOtu(toGray(bilateral(image, 20, 90, 40))));
+    cv::imshow("Normal Thresh", thresh(toGray(bilateral(image, 20, 90, 40)), 100));
+    
+    // Smooth
+    cv::imshow("Smooth", bilateral(image, 20, 90, 40));
     
     // Draw Image
     glFlush();

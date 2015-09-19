@@ -16,5 +16,9 @@ cv::Mat toHSV(cv::Mat image);
 cv::Mat toRGB(cv::Mat image);
 _hsvChannels splitHSV(cv::Mat image);
 cv::Mat toGray(cv::Mat image);
+cv::Mat threshAdaptive(cv::Mat grayImage, int blockSize, int c);
+cv::Mat threshOtu(cv::Mat grayImage);
+cv::Mat thresh(cv::Mat grayImage, int th);
+cv::Mat bilateral(cv::Mat image, int d, double sigmaColor, double sigmaSpace);
 
 #endif /* cv_method_hpp */
