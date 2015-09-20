@@ -13,7 +13,6 @@
 // Read Movie
 //cv::VideoCapture capture(0);
 cv::VideoCapture capture("/Users/zenju/Documents/seminar/AIS_GPS_Movie_20141113/Movie_originalData/001.mov");
-double fps = capture.get(CV_CAP_PROP_FPS);
 
 // Set Window Size
 int imageWidth = capture.get(CV_CAP_PROP_FRAME_WIDTH);
@@ -28,6 +27,9 @@ _mousePoint mPoint[2];
 
 // Status
 int write_flag = 0;
+
+// movie sec
+double sec = 0.0;
 
 
 // Quit by Keyboard
@@ -52,6 +54,7 @@ void display()
 {
     // capture to Mat:image
     cv::Mat image;
+    capture.set(CV_CAP_PROP_POS_MSEC, sec);
     capture >> image;
     int frames = capture.get(CV_CAP_PROP_POS_FRAMES);
     
@@ -73,26 +76,33 @@ void display()
     
     /*
     // RGB -> HSV
-    _hsvChannels hsv = splitHSV(toHSV(image));
+    cv::Mat hsv_img = toHSV(image);
+    _hsvChannels hsv = splitHSV(hsv_img);
+    cv::imshow("HSV", hsv_img);
     cv::imshow("HSV H", hsv.H);
     cv::imshow("HSV S", hsv.S);
     cv::imshow("HSV V", hsv.V);
+    cv::imshow("HSV to RGB", toRGB(image));    
     */
+    
+    //cv::imshow("K-means", kmeansColor(image, 10));
     
     // RGB -> Gray
     //cv::imshow("Gray", toGray(image));
     
     // Thresh
-    cv::imshow("Adaptive Thresh", threshAdaptive(toGray(bilateral(image, 20, 90, 40)), 7, 6));
-    cv::imshow("Otu Thresh", threshOtu(toGray(bilateral(image, 20, 90, 40))));
-    cv::imshow("Normal Thresh", thresh(toGray(bilateral(image, 20, 90, 40)), 100));
+    //cv::imshow("Adaptive Thresh", threshAdaptive(toGray(bilateral(image, 20, 90, 40)), 21, 3));
+    //cv::imshow("Otu Thresh", threshOtu(toGray(bilateral(image, 20, 90, 40))));
+    //cv::imshow("Normal Thresh", thresh(toGray(bilateral(image, 20, 90, 40)), 100));
     
     // Smooth
-    cv::imshow("Smooth", bilateral(image, 20, 90, 40));
+    //cv::imshow("Smooth", bilateral(image, 20, 90, 40));
     
     // Draw Image
     glFlush();
     glutPostRedisplay();
+    
+    sec += 10000;
 }
 
 

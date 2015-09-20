@@ -71,6 +71,23 @@ _hsvChannels splitHSV(cv::Mat hsvImage) {
 }
 
 
+// 指定したHSVの色のみ出力
+cv::Mat hsvPoint(cv::Mat hsvImage, int height, int width, int H_low, int H_hi, int S_low, int S_hi, int V_low, int V_hi) {
+    cv::Mat hsvOut = cv::Mat::zeros(height, width, CV_8UC3);
+    
+    
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            int a = hsvImage.step * y + (x * 3);
+            if (hsvImage.data[a] >= H_low && hsvImage.data[a] <= H_hi && hsvImage.data[a + 1] >= S_low && hsvImage.data[a + 1] <= S_hi && hsvImage.data[a + 2] >= V_low && hsvImage.data[a + 2] <= V_hi)
+                hsvOut.data[a] = 255;
+        }
+    }
+    
+    return hsvOut;
+}
+
+
 // RGB to Gray
 cv::Mat toGray(cv::Mat image) {
     cv::Mat grayImage;
@@ -109,4 +126,27 @@ cv::Mat bilateral(cv::Mat image, int d, double sigmaColor, double sigmaSpace) {
     cv::Mat smoothImage;
     cv::bilateralFilter(image, smoothImage, d, sigmaColor, sigmaSpace);
     return smoothImage;
+}
+
+
+// K-means subtractive color
+cv::Mat kmeansColor(cv::Mat image, int K) {
+    cv::Mat points;
+    image.convertTo(points, CV_32FC3);
+    points = points.reshape(3, image.rows * image.cols);
+    
+    cv::Mat_<int> clusters(points.size(), CV_32SC1);
+    cv::Mat centers;
+    cv::kmeans(points, K, clusters, cvTermCriteria(CV_TERMCRIT_EPS + CV_TERMCRIT_ITER, 10, 10), 1, cv::KMEANS_PP_CENTERS, centers);
+    
+    cv::Mat dstImage(image.size(), image.type());
+    cv::MatIterator_<cv::Vec3b> itd = dstImage.begin<cv::Vec3b>(), itd_end = dstImage.end<cv::Vec3b>();
+    for (int i = 0; itd != itd_end; ++itd, ++i) {
+        cv::Vec3f &color = centers.at<cv::Vec3f>(clusters(i), 0);
+        (*itd)[0] = cv::saturate_cast<uchar>(color[0]);
+        (*itd)[1] = cv::saturate_cast<uchar>(color[1]);
+        (*itd)[2] = cv::saturate_cast<uchar>(color[2]);
+    }
+    
+    return dstImage;
 }
