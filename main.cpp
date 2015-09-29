@@ -24,6 +24,7 @@ double heightMagnification;
 
 // mouse point
 _mousePoint mPoint[2];
+_mousePosition mPosition;
 
 // Status
 int write_flag = 0;
@@ -48,10 +49,22 @@ void keyboard(unsigned char key, int x, int y)
 }
 
 
+// Draw String
+void drawString(double x, double y, const std::string str){
+    void *font = GLUT_BITMAP_HELVETICA_10;
+    glRasterPos2f(x, y);
+    for (int i = 0; i < str.size(); i++) {
+        glutBitmapCharacter(font, str[i]);
+    }
+}
+
+
 
 // Play Movie
 void display()
 {
+    glRasterPos3f(0, 0, 0);
+    
     // capture to Mat:image
     cv::Mat image;
     capture.set(CV_CAP_PROP_POS_MSEC, sec);
@@ -98,11 +111,19 @@ void display()
     // Smooth
     //cv::imshow("Smooth", bilateral(image, 20, 90, 40));
     
+    
+    // draw Stinrg
+    std::string printSec = "time : " + std::to_string(sec) + " [msec]";
+    drawString(10, 670, printSec);
+    
+    std::string printMousePosition = "mouse : " + std::to_string(mPosition.x) + ", " + std::to_string((mPosition.y));
+    drawString(10, 650, printMousePosition);
+    
     // Draw Image
     glFlush();
     glutPostRedisplay();
     
-    sec += 10000;
+    sec += 1000;
 }
 
 
@@ -152,6 +173,12 @@ void mouse(int button, int state, int x, int y)
 }
 
 
+void passive_motion(int x, int y) {
+    mPosition.x = (int)(x / widthMagnification);
+    mPosition.y = (int)(y / heightMagnification);
+}
+
+
 // Main Program
 int main(int argc, char * argv[]) {
     if (!capture.isOpened()) {
@@ -166,6 +193,7 @@ int main(int argc, char * argv[]) {
     glutReshapeFunc(resize);
     glutKeyboardFunc(keyboard);
     glutMouseFunc(mouse);
+    glutPassiveMotionFunc(passive_motion);
     glutMainLoop();
     
     return 0;

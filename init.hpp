@@ -20,6 +20,12 @@ typedef struct {
 } _mousePoint;
 
 
+// Passive Motion (mouse Position)
+typedef struct {
+    int x;
+    int y;
+} _mousePosition;
+
 // HSV struct
 typedef struct {
     cv::Mat H;
